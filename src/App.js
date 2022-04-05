@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'
+import Header from './comp/Header'
+import News from './comp/News'
+import HeaderNews from './comp/HeaderNews'
 
-function App() {
+export default function App() {
+  const [news, setNews] = useState([])
+  const [country, setCountry] = useState("il")
+  const [cat, setCat] = useState("")
+  const [query, setQuery] = useState("")
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`https://newsapi.org/v2/top-headlines?country=${country}&category=${cat}&q=${query}&apiKey=4b48b89fc5994d4797a24ef392851ecd`)
+      const data = await res.json()
+      console.log(data.articles);
+      setNews(data.articles)
+
+    })()
+
+  }, [country,cat,query])
+
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>The News</h1>
+      <Header country={country} setCountry={setCountry} setCat={setCat} cat={cat} query={query} setQuery={setQuery}  />
+      
+      <HeaderNews country={country} setCountry={setCountry}/>
+      <News news={news} />
+
+
     </div>
-  );
+  )
 }
 
-export default App;
+
